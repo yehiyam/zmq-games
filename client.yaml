@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zmq-client
+  labels:
+    app: zmq-test
+    role: client
+spec:
+  selector:
+    matchLabels:
+      app: zmq-test
+      role: client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zmq-test
+        role: client
+    spec:
+      containers:
+      - name: client
+        image: yehiyam/zmqclient:v0.0.2
+        ports:
+        - name:  client
+          containerPort:  5556
+          protocol: TCP
+        env:
+          - name: DATA_SIZE
+            value: "1000000"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  client-svc
+spec:
+  selector:
+    app:  zmq-test
+    role: client
+  type:  ClusterIP
+  ports:
+  - name:  client
+    port:  5556
+    targetPort:  5556

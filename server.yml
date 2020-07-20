@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zmq-server
+  labels:
+    app: zmq-test
+    role: server
+spec:
+  selector:
+    matchLabels:
+      app: zmq-test
+      role: server
+  replicas: 60
+  template:
+    metadata:
+      labels:
+        app: zmq-test
+        role: server
+    spec:
+      containers:
+      - name: server
+        image: yehiyam/zmqserver:v0.0.2
+        env:
+        - name: CLIENT_ADDRESS
+          value: "tcp://10.233.8.240:5556"
+        - name: WORK_TIME_MS
+          value: "100"
+
